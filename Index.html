@@ -1,0 +1,1155 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>INSTALUVI — Sistema de Cotizaciones</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Segoe UI',Arial,sans-serif;background:#f0f4f8;color:#222;font-size:14px}
+.app{max-width:980px;margin:0 auto;padding:1rem}
+/* HEADER */
+.hdr{background:#1a3a5c;color:#fff;padding:1rem 1.5rem;border-radius:12px;margin-bottom:1.25rem;display:flex;align-items:center;gap:1rem}
+.logo-box{background:#fff;border-radius:8px;padding:5px 10px;display:flex;align-items:center}
+.logo-box img{height:50px;width:auto;display:block}
+/* SECCIONES */
+.sec{background:#fff;border:1px solid #dde3ec;border-radius:12px;padding:1.25rem;margin-bottom:1rem;box-shadow:0 1px 4px rgba(0,0,0,.05)}
+.st{font-size:11px;font-weight:600;color:#666;text-transform:uppercase;letter-spacing:1px;margin-bottom:1rem}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.g3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px}
+label{font-size:12px;color:#555;display:block;margin-bottom:3px}
+input,select{width:100%;font-size:13px;padding:7px 10px;border:1px solid #cdd5e0;border-radius:7px;background:#fff;color:#222;outline:none}
+input:focus,select:focus{border-color:#1a3a5c;box-shadow:0 0 0 2px rgba(26,58,92,.1)}
+.tag{display:inline-block;font-size:11px;padding:2px 8px;border-radius:20px;margin-top:4px}
+.tag-m2{background:#dbeafe;color:#1e40af}
+.tag-unit{background:#dcfce7;color:#166534}
+.pinfo{margin-top:8px;padding:10px 12px;background:#f5f7fa;border-radius:8px;font-size:13px}
+.hint3{font-size:11px;color:#888;margin-top:3px}
+.nf{font-size:11px;color:#555;margin-top:6px;padding:6px 10px;background:#f0f4f8;border-radius:6px;border-left:3px solid #1a3a5c}
+/* BOTONES */
+.add-btn{background:#1a3a5c;color:#fff;border:none;border-radius:8px;padding:10px;font-size:14px;cursor:pointer;width:100%;margin-top:10px;font-weight:500}
+.add-btn:hover{background:#224d78}
+.add-btn-sec{background:#2d6a4f;color:#fff;border:none;border-radius:8px;padding:9px 16px;font-size:13px;cursor:pointer;margin-top:8px;font-weight:500}
+.add-btn-sec:hover{background:#1b4332}
+.blim{background:#fff;border:1px solid #cdd5e0;border-radius:8px;padding:10px;font-size:13px;cursor:pointer;color:#555;width:100%;margin-top:8px}
+.blim:hover{background:#f5f7fa}
+.brow{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:10px}
+.bcot{background:#1a3a5c;color:#fff;border:none;border-radius:8px;padding:13px;font-size:14px;cursor:pointer;font-weight:600}
+.bcot:hover{background:#224d78}
+.bot{background:#fff;color:#1a3a5c;border:2px solid #1a3a5c;border-radius:8px;padding:13px;font-size:14px;cursor:pointer;font-weight:600}
+.bot:hover{background:#f0f4f8}
+.del{background:none;border:none;color:#e24b4a;cursor:pointer;font-size:16px;padding:0 4px}
+/* TABLA */
+.tbl{width:100%;border-collapse:collapse;font-size:12px}
+.tbl th{text-align:left;padding:8px 9px;background:#f0f4f8;color:#555;font-weight:600;font-size:11px;border-bottom:1px solid #dde3ec}
+.tbl td{padding:8px 9px;border-bottom:1px solid #f0f4f8;vertical-align:middle;color:#222}
+.empty{text-align:center;color:#aaa;padding:2.5rem;font-size:13px}
+/* COSTOS */
+.costo-row{display:flex;gap:8px;align-items:flex-end;flex-wrap:wrap;margin-bottom:8px}
+.costo-item{display:flex;justify-content:space-between;align-items:center;padding:7px 12px;background:#f5f7fa;border-radius:7px;margin-bottom:4px;font-size:13px}
+/* DESCUENTO */
+.desc-sec{background:#fff5f5;border:1px solid #f5c6cb;border-radius:12px;padding:1.25rem;margin-bottom:1rem}
+/* RESUMEN */
+.rg{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:14px}
+.ri,.rd{background:#f5f7fa;border-radius:12px;padding:1rem}
+.rr{display:flex;justify-content:space-between;align-items:center;padding:6px 0;font-size:13px;border-bottom:1px solid #e8edf3}
+.rr:last-child{border-bottom:none}
+.rl{color:#555}
+.rv{font-weight:600;color:#222}
+.rdesc{color:#c0392b;font-weight:600}
+.riva{color:#b7770d;font-weight:600}
+.rtot{display:flex;justify-content:space-between;align-items:center;padding:11px 14px;background:#1a3a5c;border-radius:9px;margin-top:10px}
+.rtotL{color:#fff;font-size:14px;font-weight:600}
+.rtotV{color:#fff;font-size:23px;font-weight:700}
+.warn-b{font-size:11px;background:#fff3cd;color:#856404;padding:3px 8px;border-radius:20px;margin-top:4px;display:none}
+.sug-n{font-size:11px;color:#2d6a4f;background:#e8f5e9;padding:5px 10px;border-radius:7px;margin-top:8px;display:none}
+.antrow{display:flex;justify-content:space-between;align-items:center;padding:6px 0;font-size:13px;border-top:1px solid #e8edf3;margin-top:4px}
+.saldoV{color:#c0392b;font-weight:600;font-size:17px}
+.antrow2{display:flex;align-items:center;gap:10px;margin-top:8px;flex-wrap:wrap}
+.pctB{font-size:13px;color:#1a3a5c;font-weight:600;white-space:nowrap}
+
+/* ====== MEJORA 1: IMÁGENES MÚLTIPLES ====== */
+.img-upload-btn{border:2px dashed #cdd5e0;border-radius:9px;padding:14px;text-align:center;cursor:pointer;font-size:13px;color:#666;margin-top:6px;transition:.15s;background:#fafbfc}
+.img-upload-btn:hover{border-color:#1a3a5c;background:#f0f4f8;color:#1a3a5c}
+.img-upload-icon{font-size:20px;margin-bottom:4px}
+.img-grid{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
+.img-thumb{position:relative;border-radius:8px;overflow:hidden;border:1px solid #dde3ec;flex-shrink:0}
+.img-thumb img{width:90px;height:70px;object-fit:cover;display:block}
+.img-rm{position:absolute;top:3px;right:3px;background:rgba(220,50,50,.9);color:#fff;border:none;border-radius:50%;width:20px;height:20px;font-size:11px;cursor:pointer;display:flex;align-items:center;justify-content:center;font-weight:700;line-height:1}
+.img-rm:hover{background:#c0392b}
+.img-fn{font-size:10px;text-align:center;padding:3px 4px;background:#f0f4f8;color:#666;max-width:90px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.img-cnt{font-size:11px;color:#666;margin-top:5px}
+
+/* ====== MEJORA 2: BADGE CHAPA ====== */
+.chapa-extra-badge{display:none;font-size:11px;background:#fff3cd;color:#856404;padding:3px 9px;border-radius:12px;margin-top:5px;font-weight:600;border:1px solid #ffc107}
+.chapa-extra-badge.visible{display:inline-block}
+
+@media(max-width:640px){.g2,.g3,.rg,.brow{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="app">
+
+<!-- ===== ENCABEZADO CON LOGO (MEJORA 3) ===== -->
+<!-- INSTRUCCIÓN: Colocá el archivo "logo.jpg" en la misma carpeta que este HTML -->
+<!-- El sistema carga el logo desde logo.jpg automáticamente al inicio -->
+<div class="hdr">
+  <div class="logo-box">
+    <!-- MEJORA 3: el id="logo-img" permite cargar logo.jpg dinámicamente -->
+    <img id="logo-img" src="logo.jpg" alt="INSTALUVI"
+         onerror="this.style.display='none';document.getElementById('logo-fallback').style.display='flex'"
+         style="height:50px;width:auto;display:block">
+    <!-- Fallback si no se encuentra logo.jpg -->
+    <div id="logo-fallback" style="display:none;flex-direction:column;align-items:center">
+      <span style="color:#1a3a5c;font-size:18px;font-weight:700;letter-spacing:1px">INSTALUVI</span>
+      <span style="color:#1a3a5c;font-size:7px;letter-spacing:2px">VENTANAS &amp; PUERTAS</span>
+    </div>
+  </div>
+  <div>
+    <div style="font-size:18px;font-weight:600">Sistema de Cotizaciones 2026</div>
+    <div style="font-size:12px;opacity:.75">Cotización profesional | Orden de Trabajo</div>
+  </div>
+</div>
+
+<!-- DATOS CLIENTE -->
+<div class="sec">
+  <div class="st">Datos del cliente y venta</div>
+  <div class="g2">
+    <div><label>Nombre del cliente</label><input id="cliente" type="text" placeholder="Ej: Juan Pérez"></div>
+    <div><label>Teléfono</label><input id="telefono" type="text" placeholder="Ej: 7777-1234"></div>
+    <div><label>Dirección</label><input id="direccion" type="text" placeholder="Ej: Col. Santa Inés, San Miguel"></div>
+    <div><label>Vendedor</label><input id="vendedor" type="text" placeholder="Ej: Melvin Rivera"></div>
+    <div><label>Sucursal</label>
+      <select id="sucursal">
+        <option>Ahuachapán</option><option>San Juan Opico</option><option>San Miguel</option>
+        <option>San Salvador</option><option>El Congo</option><option>Sonsonate</option>
+      </select>
+    </div>
+    <div><label>Módulo / proyecto (opcional)</label><input id="modulo" type="text" placeholder="Ej: MÓDULO 2, Proyecto Centro..."></div>
+  </div>
+</div>
+
+<!-- AGREGAR PRODUCTO -->
+<div class="sec">
+  <div class="st">Agregar producto</div>
+  <div class="g2" style="margin-bottom:10px">
+    <div><label>Categoría</label>
+      <select id="categoria" onchange="cargarProductos()">
+        <option value="puerta_abatible">Puerta abatible PVC</option>
+        <option value="puerta_corrediza_1hoja">Puerta corrediza 1 hoja PVC</option>
+        <option value="bano">Puerta corrediza de baño 2 hojas PVC</option>
+        <option value="jardin">Puerta corrediza jardín (2,3,4 hojas) PVC</option>
+        <option value="ventana_corrediza">Ventana corrediza PVC</option>
+        <option value="ventana_guillotina">Ventana guillotina PVC</option>
+        <option value="ventana_proyectable">Ventana proyectable PVC</option>
+        <option value="vidrio_fijo">Vidrio fijo PVC</option>
+      </select>
+    </div>
+    <div><label>Producto específico</label><select id="producto" onchange="mostrarInfo()"></select></div>
+  </div>
+  <div id="info-precio" class="pinfo" style="display:none"></div>
+
+  <div style="margin-top:10px">
+    <label>Precio unitario ($) — editable</label>
+    <input id="precio-edit" type="number" step="0.01" min="0" value="0"
+           oninput="calcPrev();calcPrevU()" style="max-width:190px">
+  </div>
+
+  <div class="g3" style="margin-top:10px">
+    <div>
+      <label>Tipo de vidrio (si aplica)</label>
+      <select id="tipo-vidrio">
+        <option value="">— Sin especificar —</option>
+        <option>Claro</option><option>Blanco</option><option>Gris oscuro</option>
+        <option>Gris reflectivo</option><option>Bronce normal</option>
+        <option>Bronce reflectivo</option><option>Azul reflectivo</option><option>Nevado</option>
+      </select>
+    </div>
+    <!-- ====== MEJORA 2: Chapa con incremento ====== -->
+    <div>
+      <label>Tipo de chapa (si aplica)</label>
+      <select id="tipo-chapa" onchange="onChapaChange()">
+        <option value="" data-extra="0">— Sin especificar —</option>
+        <option value="Chapa estándar" data-extra="0">Chapa estándar</option>
+        <option value="Chapa extra (doble)" data-extra="20">Chapa extra (doble)  +$20</option>
+        <option value="Chapa residencial" data-extra="60">Chapa residencial  +$60</option>
+        <option value="Haladera de acero inoxidable" data-extra="60">Haladera de acero inoxidable  +$60</option>
+        <option value="Sin chapa" data-extra="0">Sin chapa</option>
+      </select>
+      <!-- Badge que aparece cuando hay incremento -->
+      <div id="chapa-extra-badge" class="chapa-extra-badge"></div>
+    </div>
+    <div></div>
+  </div>
+
+  <!-- Medidas — visibles para todos los tipos de producto -->
+  <div style="margin-top:12px;padding:12px;background:#f5f7fa;border-radius:9px">
+    <div style="font-size:12px;font-weight:600;color:#555;margin-bottom:8px">Medidas del producto</div>
+    <div class="g3">
+      <div>
+        <label>Ancho (m)</label>
+        <input id="ancho" type="number" step="0.001" min="0.001" value="1.000" oninput="calcPrev()">
+        <div class="hint3">Ej: 0.805, 1.200</div>
+      </div>
+      <div>
+        <label>Alto (m)</label>
+        <input id="alto" type="number" step="0.001" min="0.001" value="2.100" oninput="calcPrev()">
+        <div class="hint3">Ej: 1.505, 2.100</div>
+      </div>
+      <div id="cantidad-box">
+        <label>Cantidad</label>
+        <input id="cantidad" type="number" min="1" value="1" oninput="calcPrev()">
+      </div>
+    </div>
+    <div id="prev-sub" class="pinfo" style="margin-top:8px"></div>
+    <div id="unidad-cant-box" style="display:none;margin-top:8px">
+      <label>Cantidad de unidades</label>
+      <input id="cantidad_u" type="number" min="1" value="1" oninput="calcPrevU()" style="max-width:160px">
+      <div id="prev-sub-u" class="pinfo" style="margin-top:8px"></div>
+    </div>
+    <div id="medidas-nota" style="display:none;font-size:11px;color:#888;margin-top:6px">
+      ℹ Las medidas aparecen en el PDF pero no afectan el precio (producto por unidad)
+    </div>
+  </div>
+
+  <div style="margin-top:10px">
+    <label>Descripción adicional (opcional)</label>
+    <input id="desc_extra" type="text" placeholder="Notas, color especial, instalación adicional...">
+  </div>
+  <button class="add-btn" onclick="agregarItem()">+ Agregar producto a la orden</button>
+</div>
+
+<!-- COSTOS ADICIONALES -->
+<div class="sec">
+  <div class="st">Costos adicionales (suman al total)</div>
+  <div class="costo-row">
+    <div style="flex:2;min-width:200px">
+      <label>Descripción del costo</label>
+      <input id="ca-desc" type="text" placeholder="Ej: Desmonte de puerta, Transporte especial...">
+    </div>
+    <div style="flex:1;min-width:120px">
+      <label>Monto ($)</label>
+      <input id="ca-monto" type="number" step="0.01" min="0" placeholder="0.00">
+    </div>
+    <div style="align-self:flex-end">
+      <button class="add-btn-sec" onclick="agregarCosto()">+ Agregar</button>
+    </div>
+  </div>
+  <div id="costos-list">
+    <div style="font-size:12px;color:#aaa">No hay costos adicionales.</div>
+  </div>
+</div>
+
+<!-- DESCUENTO -->
+<div class="desc-sec">
+  <div class="st" style="color:#c0392b">Descuento (opcional)</div>
+  <div style="display:flex;gap:10px;align-items:flex-end;flex-wrap:wrap">
+    <div style="flex:1;min-width:140px">
+      <label>Porcentaje de descuento (%)</label>
+      <input id="desc-pct" type="number" step="0.5" min="0" max="100" placeholder="0" oninput="recalc()">
+    </div>
+    <div style="flex:2;min-width:200px">
+      <label>Motivo del descuento (aparece en PDF)</label>
+      <input id="desc-motivo" type="text" placeholder="Ej: Descuento por volumen, cliente especial...">
+    </div>
+  </div>
+</div>
+
+<!-- DETALLE + RESUMEN -->
+<div class="sec">
+  <div class="st">Detalle de productos</div>
+  <div id="detalle"><div class="empty">No hay productos agregados.</div></div>
+
+  <div id="totales-box" style="display:none;margin-top:18px">
+    <div style="font-size:12px;font-weight:600;color:#555;margin-bottom:10px;text-transform:uppercase;letter-spacing:.5px">
+      Resumen de pagos
+    </div>
+    <div class="rg">
+      <!-- IZQUIERDA: desglose -->
+      <div class="ri">
+        <div class="rr"><span class="rl">Subtotal productos + adicionales:</span><span class="rv" id="r-subtotal">$0.00</span></div>
+        <div class="rr" id="r-desc-row" style="display:none">
+          <span class="rl" id="r-desc-label">Descuento (0%):</span>
+          <span class="rdesc" id="r-desc-val">-$0.00</span>
+        </div>
+        <div class="rr" id="r-subdesc-row" style="display:none">
+          <span class="rl">Subtotal con descuento:</span>
+          <span class="rv" id="r-subdesc">$0.00</span>
+        </div>
+        <div class="rr" id="r-iva-row" style="display:none">
+          <span class="rl">IVA (13%):</span>
+          <span class="riva" id="r-iva-val">+$0.00</span>
+        </div>
+        <div class="rtot">
+          <span class="rtotL">TOTAL FINAL:</span>
+          <span class="rtotV" id="r-total">$0.00</span>
+        </div>
+        <div style="margin-top:10px">
+          <label style="display:flex;align-items:center;gap:7px;font-size:13px;color:#333;cursor:pointer;margin:0;font-weight:500">
+            <input type="checkbox" id="aplicar-iva" onchange="recalc()" style="width:auto;cursor:pointer">
+            Aplicar IVA 13%
+          </label>
+        </div>
+        <!-- Precio sugerido solo interno, NO aparece en PDF -->
+        <div id="sug-n" class="sug-n"></div>
+      </div>
+
+      <!-- DERECHA: precio al cliente, anticipo, saldo -->
+      <div class="rd">
+        <div style="font-size:12px;color:#555;margin-bottom:5px;font-weight:500">Precio al cliente</div>
+        <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
+          <div style="font-size:28px;font-weight:700;color:#1a3a5c" id="der-precio">$0.00</div>
+          <button id="btn-reset" onclick="resetPrecio()"
+            style="display:none;font-size:11px;color:#2d6a4f;cursor:pointer;background:#e8f5e9;padding:3px 9px;border-radius:12px;border:none;font-weight:500">
+            ↺ Usar automático
+          </button>
+        </div>
+        <div class="warn-b" id="warn-badge">⚠ Precio modificado manualmente</div>
+        <div style="margin-top:9px">
+          <label style="font-size:12px;color:#555;margin-bottom:3px;display:block">Ajustar precio ($) — opcional</label>
+          <input id="precio-manual" type="number" step="0.01" placeholder="Vacío = automático" oninput="onPrecioManual()" style="max-width:210px">
+        </div>
+        <div style="margin-top:14px;border-top:1px solid #dde3ec;padding-top:13px">
+          <label style="font-size:12px;color:#555;margin-bottom:4px;display:block;font-weight:500">Forma de pago</label>
+          <select id="forma-pago" style="margin-bottom:10px">
+            <option>Efectivo</option><option>Transferencia bancaria</option>
+            <option>Cheque</option><option>Mixto (efectivo + transferencia)</option>
+          </select>
+          <div class="antrow2">
+            <div style="flex:1;min-width:110px">
+              <label>Anticipo ($)</label>
+              <input id="anticipo" type="number" step="0.01" min="0" placeholder="0.00" oninput="calcSaldo()">
+            </div>
+            <div class="pctB" id="anticipo-pct">0%</div>
+          </div>
+          <div class="antrow">
+            <span style="color:#555;font-size:13px">Saldo pendiente:</span>
+            <span class="saldoV" id="saldo-val">$0.00</span>
+          </div>
+        </div>
+        <div style="margin-top:11px">
+          <label style="font-size:12px;color:#555;margin-bottom:3px;display:block">Nota condiciones de pago</label>
+          <input id="nota-pago" type="text"
+            value="El anticipo debe de ser el 70% y restante 30% cuando ya está todo instalado"
+            style="font-size:12px">
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ====== MEJORA 1: MÚLTIPLES IMÁGENES ====== -->
+<div class="sec">
+  <div class="st">Imágenes para Orden de Trabajo (opcional)</div>
+  <div class="g2">
+    <!-- Fotos del producto: múltiples -->
+    <div>
+      <label style="font-weight:500">Fotos del producto / puerta</label>
+      <div class="img-upload-btn" onclick="document.getElementById('inp-prod').click()">
+        <div class="img-upload-icon">📷</div>
+        <div style="font-weight:500">Agregar foto(s) del producto</div>
+        <div style="font-size:11px;opacity:.7;margin-top:2px">Podés seleccionar varias a la vez</div>
+      </div>
+      <input type="file" id="inp-prod" accept="image/*" multiple style="display:none"
+             onchange="addImgs('prod',this)">
+      <div id="cnt-prod" class="img-cnt"></div>
+      <div id="grid-prod" class="img-grid"></div>
+    </div>
+    <!-- Fotos del cuaderno: múltiples -->
+    <div>
+      <label style="font-weight:500">Fotos del cuaderno de medidas</label>
+      <div class="img-upload-btn" onclick="document.getElementById('inp-cua').click()">
+        <div class="img-upload-icon">📐</div>
+        <div style="font-weight:500">Agregar foto(s) del cuaderno</div>
+        <div style="font-size:11px;opacity:.7;margin-top:2px">Podés seleccionar varias a la vez</div>
+      </div>
+      <input type="file" id="inp-cua" accept="image/*" multiple style="display:none"
+             onchange="addImgs('cua',this)">
+      <div id="cnt-cua" class="img-cnt"></div>
+      <div id="grid-cua" class="img-grid"></div>
+    </div>
+  </div>
+</div>
+
+<div class="brow">
+  <button class="bcot" onclick="generarCotizacion()">📄 Imprimir Cotización</button>
+  <button class="bot" onclick="generarOrdenTrabajo()">🔧 Imprimir Orden de Trabajo</button>
+</div>
+<button class="blim" onclick="limpiarTodo()">🗑 Limpiar todo</button>
+
+</div><!-- /app -->
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.3/jspdf.plugin.autotable.min.js"></script>
+<script>
+// ============================================================
+// MEJORA 3: Logo para PDF — carga desde logo.jpg al inicio
+// ============================================================
+let LOGO_B64_PDF = null; // se llenará con el logo real
+(function cargarLogoParaPDF() {
+  const img = new Image();
+  img.crossOrigin = 'anonymous';
+  img.onload = function() {
+    const canvas = document.createElement('canvas');
+    canvas.width = img.naturalWidth;
+    canvas.height = img.naturalHeight;
+    const ctx = canvas.getContext('2d');
+    ctx.drawImage(img, 0, 0);
+    LOGO_B64_PDF = canvas.toDataURL('image/jpeg').split(',')[1];
+  };
+  img.onerror = function() {
+    // Si no encuentra logo.jpg, usará texto "INSTALUVI" en el PDF
+    LOGO_B64_PDF = null;
+  };
+  img.src = 'logo.jpg?' + Date.now(); // evita caché
+})();
+
+// ============================================================
+// MEJORA 1: Arrays de imágenes múltiples
+// ============================================================
+let imgs = { prod: [], cua: [] };
+
+function addImgs(tipo, inp) {
+  const files = Array.from(inp.files);
+  files.forEach(function(f) {
+    const reader = new FileReader();
+    reader.onload = function(e) {
+      imgs[tipo].push({
+        id: Date.now() + Math.random(),
+        name: f.name,
+        b64: e.target.result
+      });
+      renderImgGrid(tipo);
+    };
+    reader.readAsDataURL(f);
+  });
+  inp.value = ''; // reset para poder agregar los mismos archivos de nuevo
+}
+
+function removeImg(tipo, id) {
+  imgs[tipo] = imgs[tipo].filter(function(i) { return i.id !== id; });
+  renderImgGrid(tipo);
+}
+
+function renderImgGrid(tipo) {
+  const grid = document.getElementById('grid-' + tipo);
+  const cnt  = document.getElementById('cnt-'  + tipo);
+  const arr  = imgs[tipo];
+  cnt.textContent = arr.length > 0 ? arr.length + ' imagen(es) agregada(s)' : '';
+  grid.innerHTML = arr.map(function(im) {
+    return '<div class="img-thumb">' +
+      '<img src="' + im.b64 + '" alt="' + im.name + '">' +
+      '<button class="img-rm" onclick="removeImg(\'' + tipo + '\',' + im.id + ')">✕</button>' +
+      '<div class="img-fn" title="' + im.name + '">' + im.name + '</div>' +
+      '</div>';
+  }).join('');
+}
+
+// ============================================================
+// MEJORA 2: Incremento automático por tipo de chapa
+// ============================================================
+function getChapaExtra() {
+  const sel = document.getElementById('tipo-chapa');
+  const opt = sel.options[sel.selectedIndex];
+  return parseFloat(opt ? (opt.getAttribute('data-extra') || 0) : 0);
+}
+
+function onChapaChange() {
+  const extra = getChapaExtra();
+  const badge = document.getElementById('chapa-extra-badge');
+  if (extra > 0) {
+    badge.textContent = '+$' + extra.toFixed(2) + ' se suma al precio unitario';
+    badge.classList.add('visible');
+  } else {
+    badge.classList.remove('visible');
+  }
+  // Actualizar previsualización sin romper nada
+  calcPrev();
+  calcPrevU();
+}
+
+// ============================================================
+// LÓGICA EXISTENTE — sin modificaciones en los cálculos
+// ============================================================
+var items = [], costos = [], productoActual = null;
+var CALC = { subtotal:0, descMonto:0, descPct:0, subDescuento:0, iva:0, totalFinal:0,
+             precioCliente:0, anticipo:0, saldo:0, apIva:false };
+var precioManualActivo = false;
+
+function fmtN(n) { return parseFloat(n.toFixed(3)).toString(); }
+function fmtM(a, h) { return fmtN(a) + ' ancho x ' + fmtN(h) + ' alto'; }
+function fmt2(n) { return n.toFixed(2); }
+
+function precioSug(t) {
+  if (t <= 0) return 0;
+  var u = [5, 10, 25, 50, 100];
+  for (var i = 0; i < u.length; i++) {
+    var r = Math.ceil(t / u[i]) * u[i];
+    if (r - t <= u[i] * 0.4) return r;
+  }
+  return Math.ceil(t / 25) * 25;
+}
+
+// RECALC — lógica central sin modificar
+function recalc() {
+  var sP = items.reduce(function(s,i){ return s+i.subtotal; }, 0);
+  var sC = costos.reduce(function(s,c){ return s+c.monto; }, 0);
+  var subtotal = parseFloat((sP + sC).toFixed(2));
+  var descPct  = parseFloat(document.getElementById('desc-pct').value) || 0;
+  var descMonto= parseFloat((subtotal * descPct / 100).toFixed(2));
+  var subDesc  = parseFloat((subtotal - descMonto).toFixed(2));
+  var apIva    = document.getElementById('aplicar-iva').checked;
+  var iva      = apIva ? parseFloat((subDesc * 0.13).toFixed(2)) : 0;
+  var totalFinal = parseFloat((subDesc + iva).toFixed(2));
+
+  var pm = parseFloat(document.getElementById('precio-manual').value);
+  var precioCliente = totalFinal;
+  if (!isNaN(pm) && document.getElementById('precio-manual').value.trim() !== '') {
+    precioCliente = pm;
+    precioManualActivo = true;
+  } else {
+    precioManualActivo = false;
+  }
+
+  var anticipo = parseFloat(document.getElementById('anticipo').value) || 0;
+  var saldo    = Math.max(0, parseFloat((precioCliente - anticipo).toFixed(2)));
+  var pct      = precioCliente > 0 ? ((anticipo / precioCliente) * 100).toFixed(0) : 0;
+
+  CALC = { subtotal:subtotal, descMonto:descMonto, descPct:descPct,
+           subDescuento:subDesc, iva:iva, totalFinal:totalFinal,
+           precioCliente:precioCliente, anticipo:anticipo, saldo:saldo, apIva:apIva };
+
+  // Actualizar UI
+  document.getElementById('r-subtotal').textContent = '$' + fmt2(subtotal);
+  if (descPct > 0) {
+    document.getElementById('r-desc-row').style.display = 'flex';
+    document.getElementById('r-subdesc-row').style.display = 'flex';
+    document.getElementById('r-desc-label').textContent = 'Descuento (' + descPct + '%):';
+    document.getElementById('r-desc-val').textContent = '-$' + fmt2(descMonto);
+    document.getElementById('r-subdesc').textContent = '$' + fmt2(subDesc);
+  } else {
+    document.getElementById('r-desc-row').style.display = 'none';
+    document.getElementById('r-subdesc-row').style.display = 'none';
+  }
+  document.getElementById('r-iva-row').style.display = apIva ? 'flex' : 'none';
+  document.getElementById('r-iva-val').textContent = '+$' + fmt2(iva);
+  document.getElementById('r-total').textContent = '$' + fmt2(totalFinal);
+  document.getElementById('der-precio').textContent = '$' + fmt2(precioCliente);
+  document.getElementById('warn-badge').style.display = (precioManualActivo && precioCliente !== totalFinal) ? 'block' : 'none';
+  document.getElementById('btn-reset').style.display = precioManualActivo ? 'inline-block' : 'none';
+  document.getElementById('anticipo-pct').textContent = pct + '%';
+  document.getElementById('saldo-val').textContent = '$' + fmt2(saldo);
+
+  var sug = precioSug(totalFinal);
+  var sn  = document.getElementById('sug-n');
+  if (sug > 0 && sug !== totalFinal) {
+    sn.style.display = 'block';
+    sn.textContent = '💡 Precio sugerido (solo interno): $' + fmt2(sug);
+  } else {
+    sn.style.display = 'none';
+  }
+}
+
+function calcSaldo()     { recalc(); }
+function onPrecioManual(){ recalc(); }
+function resetPrecio()   { document.getElementById('precio-manual').value = ''; precioManualActivo = false; recalc(); }
+
+// ============================================================
+// BASE DE DATOS DE PRECIOS 2026
+// ============================================================
+var DB = {
+  puerta_abatible: [
+    {n:'Puerta abatible PVC blanco SIN diseño — 0.90-1.00m x 2.00-2.10m',tipo:'unidad',precio:255,nota:'Incluye chapa, contramarco y bisagras'},
+    {n:'Puerta abatible PVC blanco SIN diseño — 1.10-1.20m x 2.10-2.20m',tipo:'unidad',precio:275,nota:'Incluye chapa, contramarco y bisagras'},
+    {n:'Puerta abatible PVC madera SIN diseño — 0.80-1.10m x 2.00-2.10m',tipo:'unidad',precio:365,nota:'Incluye chapa, contramarco y bisagras'},
+    {n:'Puerta abatible PVC madera SIN diseño — 1.10-1.20m x 2.10-2.20m',tipo:'unidad',precio:410,nota:'Incluye chapa, contramarco y bisagras'},
+    {n:'Puerta abatible PVC negro foliado SIN diseño — 0.80-1.10m x 2.00-2.10m',tipo:'unidad',precio:300,nota:'Incluye chapa, contramarco y bisagras'},
+    {n:'Puerta abatible PVC negro foliado SIN diseño — 1.10-1.20m x 2.10-2.20m',tipo:'unidad',precio:325,nota:'Incluye chapa, contramarco y bisagras'},
+    {n:'Puerta abatible PVC blanco CON diseño — 0.60-1.10m x 2.10m',tipo:'unidad',precio:290,nota:'Incluye chapa, contramarco y bisagras'},
+    {n:'Puerta abatible PVC blanco CON diseño — 1.10-1.20m x 2.10-2.20m',tipo:'unidad',precio:325,nota:'Incluye chapa, contramarco y bisagras'},
+    {n:'Puerta abatible PVC madera CON diseño — 1.00-1.10m x 2.00-2.10m',tipo:'unidad',precio:390,nota:'Incluye chapa, contramarco y bisagras'},
+    {n:'Puerta abatible PVC madera CON diseño — 1.10-1.20m x 2.10-2.20m',tipo:'unidad',precio:445,nota:'Incluye chapa, contramarco y bisagras'},
+    {n:'Puerta abatible PVC negro foliado CON diseño — 1.00-1.10m x 2.00-2.10m',tipo:'unidad',precio:335,nota:'Incluye chapa, contramarco y bisagras'},
+    {n:'Puerta abatible PVC negro CON diseño — 1.10-1.20m x 2.10-2.20m',tipo:'unidad',precio:360,nota:'Incluye chapa, contramarco y bisagras'},
+  ],
+  puerta_corrediza_1hoja: [
+    {n:'Puerta corrediza 1 hoja PVC blanco SIN diseño — 0.90-1.10m x 2.10m',tipo:'unidad',precio:255},
+    {n:'Puerta corrediza 1 hoja PVC blanco SIN diseño — 1.10-1.20m x 2.10-2.20m',tipo:'unidad',precio:315},
+    {n:'Puerta corrediza 1 hoja PVC negro SIN diseño — 0.90-1.10m x 2.10m',tipo:'unidad',precio:315},
+    {n:'Puerta corrediza 1 hoja PVC negro SIN diseño — 1.10-1.20m x 2.10-2.20m',tipo:'unidad',precio:375},
+    {n:'Puerta corrediza 1 hoja PVC madera SIN diseño — 0.90-1.10m x 2.10m',tipo:'unidad',precio:355},
+    {n:'Puerta corrediza 1 hoja PVC madera SIN diseño — 1.10-1.20m x 2.10-2.20m',tipo:'unidad',precio:415},
+  ],
+  bano: [
+    {n:'Puerta corrediza baño 2 hojas PVC blanco',tipo:'m2',precio:115},
+    {n:'Puerta corrediza baño 2 hojas PVC negro',tipo:'m2',precio:135},
+    {n:'Puerta corrediza baño 2 hojas PVC madera',tipo:'m2',precio:140}
+  ],
+  jardin: [
+    {n:'Puerta corrediza jardín 2-3-4 hojas PVC blanco con mosquitero',tipo:'m2',precio:150},
+    {n:'Puerta corrediza jardín 2-3-4 hojas PVC negro con mosquitero',tipo:'m2',precio:170},
+    {n:'Puerta corrediza jardín 2-3-4 hojas PVC madera con mosquitero',tipo:'m2',precio:175}
+  ],
+  ventana_corrediza: [
+    {n:'Ventana corrediza PVC blanco SIN mosquitero — perfil S60',tipo:'m2',precio:90,nota:'Altura máxima recomendada 1.20m'},
+    {n:'Ventana corrediza PVC blanco CON mosquitero — perfil HN/S80',tipo:'m2',precio:100,nota:'Si alto > 1.20m usar perfil S80'},
+    {n:'Ventana corrediza PVC blanco CON mosquitero — perfil S80',tipo:'m2',precio:110},
+    {n:'Ventana corrediza PVC negro SIN mosquitero — perfil S60',tipo:'m2',precio:140},
+    {n:'Ventana corrediza PVC negro CON mosquitero — perfil S80',tipo:'m2',precio:150},
+    {n:'Ventana corrediza PVC madera SIN mosquitero — perfil S60',tipo:'m2',precio:145},
+    {n:'Ventana corrediza PVC madera CON mosquitero — perfil S80',tipo:'m2',precio:155},
+  ],
+  ventana_guillotina: [
+    {n:'Ventana guillotina PVC blanco con mosquitero fijo',tipo:'m2',precio:125},
+    {n:'Ventana guillotina PVC negro con mosquitero fijo',tipo:'m2',precio:135},
+    {n:'Ventana guillotina PVC madera con mosquitero fijo',tipo:'m2',precio:145}
+  ],
+  ventana_proyectable: [
+    {n:'Ventana proyectable PVC blanco',tipo:'m2',precio:140},
+    {n:'Ventana proyectable PVC negro',tipo:'m2',precio:165},
+    {n:'Ventana proyectable PVC madera',tipo:'m2',precio:165}
+  ],
+  vidrio_fijo: [
+    {n:'Vidrio fijo PVC blanco',tipo:'m2',precio:100},
+    {n:'Vidrio fijo PVC negro',tipo:'m2',precio:110},
+    {n:'Vidrio fijo PVC madera',tipo:'m2',precio:115}
+  ]
+};
+
+function cargarProductos() {
+  var cat = document.getElementById('categoria').value;
+  document.getElementById('producto').innerHTML = DB[cat].map(function(p,i){
+    return '<option value="'+i+'">'+p.n+'</option>';
+  }).join('');
+  mostrarInfo();
+}
+
+function mostrarInfo() {
+  var cat = document.getElementById('categoria').value;
+  var idx = parseInt(document.getElementById('producto').value);
+  productoActual = DB[cat][idx];
+  var p = productoActual;
+  var tTag = p.tipo === 'm2'
+    ? '<span class="tag tag-m2">Precio por m²</span>'
+    : '<span class="tag tag-unit">Precio por unidad</span>';
+  document.getElementById('info-precio').style.display = 'block';
+  document.getElementById('info-precio').innerHTML =
+    '<strong>$' + p.precio.toFixed(2) + '</strong> ' + tTag +
+    (p.nota ? '<div class="nf">'+p.nota+'</div>' : '');
+  document.getElementById('precio-edit').value = p.precio.toFixed(2);
+  if (p.tipo === 'm2') {
+    document.getElementById('cantidad-box').style.display = 'block';
+    document.getElementById('unidad-cant-box').style.display = 'none';
+    document.getElementById('medidas-nota').style.display = 'none';
+  } else {
+    document.getElementById('cantidad-box').style.display = 'none';
+    document.getElementById('unidad-cant-box').style.display = 'block';
+    document.getElementById('medidas-nota').style.display = 'block';
+  }
+  calcPrev(); calcPrevU();
+}
+
+function getPE() { return parseFloat(document.getElementById('precio-edit').value) || 0; }
+
+// calcPrev y calcPrevU — MEJORA 2 integrada: getChapaExtra() suma el extra
+function calcPrev() {
+  if (!productoActual || productoActual.tipo !== 'm2') return;
+  var a = parseFloat(document.getElementById('ancho').value) || 0;
+  var h = parseFloat(document.getElementById('alto').value) || 0;
+  var q = parseInt(document.getElementById('cantidad').value) || 0;
+  var extra = getChapaExtra(); // MEJORA 2
+  var p = getPE() + extra;
+  var area = parseFloat((a * h).toFixed(6));
+  var sub  = parseFloat((area * p * q).toFixed(2));
+  var xt = extra > 0 ? ' <span style="color:#856404">(+$'+extra.toFixed(2)+' chapa)</span>' : '';
+  document.getElementById('prev-sub').innerHTML =
+    '<strong>'+fmtM(a,h)+'</strong> | Área: <strong>'+area.toFixed(3)+' m²</strong> | $'+p.toFixed(2)+'/m²'+xt+
+    ' | Subtotal: <strong style="color:#1a3a5c">$'+sub.toFixed(2)+'</strong>';
+}
+
+function calcPrevU() {
+  if (!productoActual || productoActual.tipo !== 'unidad') return;
+  var q = parseInt(document.getElementById('cantidad_u').value) || 0;
+  var extra = getChapaExtra(); // MEJORA 2
+  var p = getPE() + extra;
+  var a = parseFloat(document.getElementById('ancho').value) || 0;
+  var h = parseFloat(document.getElementById('alto').value) || 0;
+  var xt = extra > 0 ? ' <span style="color:#856404">(+$'+extra.toFixed(2)+' chapa)</span>' : '';
+  document.getElementById('prev-sub').innerHTML =
+    'Medidas: <strong>'+fmtM(a,h)+'</strong> (solo referencia)';
+  document.getElementById('prev-sub-u').innerHTML =
+    '$'+p.toFixed(2)+'/ud'+xt+' | Subtotal: <strong style="color:#1a3a5c">$'+(p*q).toFixed(2)+'</strong>';
+}
+
+function agregarCosto() {
+  var d = document.getElementById('ca-desc').value.trim();
+  var m = parseFloat(document.getElementById('ca-monto').value) || 0;
+  if (!d || m <= 0) return;
+  costos.push({ desc: d, monto: m });
+  document.getElementById('ca-desc').value = '';
+  document.getElementById('ca-monto').value = '';
+  renderCostos();
+  if (items.length > 0) recalc();
+}
+
+function eliminarCosto(i) {
+  costos.splice(i, 1);
+  renderCostos();
+  if (items.length > 0) recalc();
+}
+
+function renderCostos() {
+  var c = document.getElementById('costos-list');
+  if (!costos.length) {
+    c.innerHTML = '<div style="font-size:12px;color:#aaa">No hay costos adicionales.</div>';
+    return;
+  }
+  c.innerHTML = costos.map(function(ci, i) {
+    return '<div class="costo-item"><span>'+ci.desc+'</span>' +
+      '<span style="display:flex;align-items:center;gap:8px">' +
+      '<span style="color:#2d6a4f;font-weight:600">+$'+ci.monto.toFixed(2)+'</span>' +
+      '<button class="del" onclick="eliminarCosto('+i+')">✕</button></span></div>';
+  }).join('');
+}
+
+function agregarItem() {
+  var p = productoActual; if (!p) return;
+  var desc     = document.getElementById('desc_extra').value;
+  var vidrio   = document.getElementById('tipo-vidrio').value;
+  var chapaVal = document.getElementById('tipo-chapa').value;
+  var chapaExtra = getChapaExtra();          // MEJORA 2
+  var precioFinal = getPE() + chapaExtra;   // precio base + extra chapa
+  var ancho = parseFloat(document.getElementById('ancho').value) || 0;
+  var alto  = parseFloat(document.getElementById('alto').value)  || 0;
+  var subtotal, medidas, area = null, cantidad;
+
+  if (p.tipo === 'm2') {
+    cantidad = parseInt(document.getElementById('cantidad').value) || 1;
+    area     = parseFloat((ancho * alto).toFixed(6));
+    subtotal = parseFloat((area * precioFinal * cantidad).toFixed(2));
+    medidas  = fmtM(ancho, alto);
+    items.push({ nombre:p.n, tipo:'m2', precio:precioFinal, chapaExtra:chapaExtra,
+                 chapaLabel:chapaVal, cantidad:cantidad, medidas:medidas, area:area,
+                 subtotal:subtotal, desc:desc, vidrio:vidrio });
+  } else {
+    cantidad = parseInt(document.getElementById('cantidad_u').value) || 1;
+    subtotal = parseFloat((precioFinal * cantidad).toFixed(2));
+    medidas  = fmtM(ancho, alto);
+    items.push({ nombre:p.n, tipo:'unidad', precio:precioFinal, chapaExtra:chapaExtra,
+                 chapaLabel:chapaVal, cantidad:cantidad, medidas:medidas, area:null,
+                 subtotal:subtotal, desc:desc, vidrio:vidrio });
+  }
+  document.getElementById('desc_extra').value = '';
+  document.getElementById('tipo-vidrio').value = '';
+  document.getElementById('tipo-chapa').value = '';
+  document.getElementById('chapa-extra-badge').classList.remove('visible');
+  renderDetalle();
+}
+
+function renderDetalle() {
+  var c = document.getElementById('detalle');
+  if (!items.length) {
+    c.innerHTML = '<div class="empty">No hay productos agregados.</div>';
+    document.getElementById('totales-box').style.display = 'none';
+    return;
+  }
+  var rows = items.map(function(it, idx) {
+    var extras = [];
+    if (it.vidrio)    extras.push('Vidrio: ' + it.vidrio);
+    if (it.chapaLabel) extras.push('Chapa: ' + it.chapaLabel +
+      (it.chapaExtra > 0 ? ' (+$' + it.chapaExtra.toFixed(2) + ')' : ''));
+    if (it.desc) extras.push(it.desc);
+    var exTxt = extras.length ? '<br><span style="font-size:11px;color:#777">'+extras.join(' | ')+'</span>' : '';
+    var medTxt = it.medidas + (it.tipo === 'm2'
+      ? '<br><span style="font-size:11px;color:#777">área: '+it.area.toFixed(3)+' m²</span>' : '');
+    return '<tr>' +
+      '<td>'+it.cantidad+'</td>' +
+      '<td style="max-width:200px">'+it.nombre+exTxt+'</td>' +
+      '<td>'+medTxt+'</td>' +
+      '<td>$'+it.precio.toFixed(2)+'/'+(it.tipo==='m2'?'m²':'ud')+'</td>' +
+      '<td style="font-weight:600;color:#1a3a5c">$'+it.subtotal.toFixed(2)+'</td>' +
+      '<td><button class="del" onclick="eliminar('+idx+')">✕</button></td>' +
+      '</tr>';
+  }).join('');
+  c.innerHTML = '<table class="tbl"><thead><tr>' +
+    '<th>Cant.</th><th>Descripción</th><th>Medidas</th>' +
+    '<th>Precio unit.</th><th>Subtotal</th><th></th>' +
+    '</tr></thead><tbody>' + rows + '</tbody></table>';
+  document.getElementById('totales-box').style.display = 'block';
+  document.getElementById('precio-manual').value = '';
+  precioManualActivo = false;
+  recalc();
+}
+
+function eliminar(idx) { items.splice(idx, 1); renderDetalle(); }
+
+function limpiarTodo() {
+  items = []; costos = []; precioManualActivo = false;
+  imgs = { prod: [], cua: [] };               // MEJORA 1: limpiar arrays
+  renderImgGrid('prod'); renderImgGrid('cua');
+  renderDetalle(); renderCostos();
+  ['cliente','telefono','direccion','vendedor','modulo','desc_extra',
+   'anticipo','precio-manual','ca-desc','ca-monto','desc-pct','desc-motivo']
+  .forEach(function(id) {
+    var el = document.getElementById(id);
+    if (el) el.value = '';
+  });
+  document.getElementById('aplicar-iva').checked = false;
+  document.getElementById('nota-pago').value =
+    'El anticipo debe de ser el 70% y restante 30% cuando ya está todo instalado';
+  document.getElementById('chapa-extra-badge').classList.remove('visible');
+}
+
+// ============================================================
+// CLÁUSULAS FIJAS
+// ============================================================
+var CLS = [
+  {b:true, t:'Nuestro servicio de Instalacion incluye',
+   r:': sellado perimetral interno, transporte en el area de San Salvador y Lourde'},
+  {t:'NO SE REALIZAN TRABAJOS DE ALBAÑILERIA'},
+  {t:'EL DESMONTE DE PUERTAS O VENTANAS TIENE COSTO ADICIONAL'},
+  {b:true, t:'Garantías',
+   r:': todos nuestros productos tienen garantías, el pvc blanco proporcionado por el proveedor son 10 años de garantia por DESCOLORAMIENTO, PVC madera y Negro 6 años de Garantia por DESCOLORAMIENTO. GARANTIAS POR ACCESORIOS: chapas, rodos, haladeras son 2 meses de garantia por desperfecto de fabrica, no aplica si es por mal uso (esto sera evaluado por uno de nuestros tecnicos)'},
+  {t:'Garantia no cubre, vidrios quebrados o rompimieto de malla mosquitera'},
+  {t:'Garantias por instalacion: son dos meses estas aplican por desplome o desnivel de la puerta, fallas en el cierre de la puerta'},
+  {t:'Despues de la fecha de garantia brindamos el servicio de revision por un costo adicional'},
+];
+
+// ============================================================
+// FUNCIONES PDF COMUNES
+// ============================================================
+function hdrPDF(doc, titulo, numDoc) {
+  var W  = doc.internal.pageSize.getWidth();
+  var az = [26, 58, 92], bl = [255, 255, 255];
+  var fecha = new Date().toLocaleDateString('es-SV',
+    { day:'2-digit', month:'2-digit', year:'numeric' });
+  doc.setFillColor(az[0], az[1], az[2]);
+  doc.rect(0, 0, W, 42, 'F');
+
+  // MEJORA 3: Logo en PDF — usa LOGO_B64_PDF si está disponible
+  if (LOGO_B64_PDF) {
+    try { doc.addImage(LOGO_B64_PDF, 'JPEG', 10, 5, 36, 32); }
+    catch(e) { dibujarLogoTexto(doc, W); }
+  } else {
+    dibujarLogoTexto(doc, W);
+  }
+
+  doc.setTextColor(bl[0], bl[1], bl[2]);
+  doc.setFontSize(20); doc.setFont('helvetica', 'bold');
+  doc.text(titulo, W/2 + 8, 20, { align: 'center' });
+  doc.setFontSize(9); doc.setFont('helvetica', 'normal');
+  doc.text('Fecha: ' + fecha, W/2 + 8, 30, { align: 'center' });
+  doc.setFontSize(8);
+  doc.text('No. ' + numDoc, W - 12, 16, { align: 'right' });
+  doc.text('Sucursal: ' + document.getElementById('sucursal').value, W - 12, 25, { align: 'right' });
+}
+
+// Fallback si no hay logo.jpg
+function dibujarLogoTexto(doc, W) {
+  doc.setFillColor(255, 255, 255);
+  doc.roundedRect(10, 7, 44, 26, 3, 3, 'F');
+  doc.setTextColor(26, 58, 92);
+  doc.setFontSize(13); doc.setFont('helvetica', 'bold');
+  doc.text('INSTALUVI', 32, 18, { align: 'center' });
+  doc.setFontSize(6); doc.setFont('helvetica', 'normal');
+  doc.text('VENTANAS & PUERTAS', 32, 24, { align: 'center' });
+}
+
+function datosPDF(doc, y, conDir) {
+  var W  = doc.internal.pageSize.getWidth();
+  var az = [26,58,92], ng = [30,30,30], gr = [245,247,250], gm = [180,190,200];
+  var cli  = document.getElementById('cliente').value  || '—';
+  var tel  = document.getElementById('telefono').value || '—';
+  var dir  = document.getElementById('direccion').value|| '—';
+  var vend = document.getElementById('vendedor').value || '—';
+  var suc  = document.getElementById('sucursal').value;
+  var h = conDir ? 46 : 38;
+  doc.setFillColor(gr[0],gr[1],gr[2]); doc.rect(10,y-4,W-20,h,'F');
+  doc.setDrawColor(gm[0],gm[1],gm[2]); doc.setLineWidth(.2); doc.rect(10,y-4,W-20,h,'S');
+  doc.setTextColor(az[0],az[1],az[2]); doc.setFontSize(7); doc.setFont('helvetica','bold');
+  doc.text('DATOS DEL CLIENTE', 14, y+2);
+  doc.setTextColor(ng[0],ng[1],ng[2]); doc.setFontSize(9);
+  doc.setFont('helvetica','bold'); doc.text('Cliente:', 14, y+11);
+  doc.setFont('helvetica','normal'); doc.text(cli, 38, y+11);
+  doc.setFont('helvetica','bold'); doc.text('Teléfono:', 14, y+20);
+  doc.setFont('helvetica','normal'); doc.text(tel, 38, y+20);
+  if (conDir) {
+    doc.setFont('helvetica','bold'); doc.text('Dirección:', 14, y+29);
+    doc.setFont('helvetica','normal'); doc.text(dir, 38, y+29);
+    doc.setFont('helvetica','bold'); doc.text('Vendedor:', 14, y+38);
+    doc.setFont('helvetica','normal'); doc.text(vend, 38, y+38);
+  } else {
+    doc.setFont('helvetica','bold'); doc.text('Vendedor:', 14, y+29);
+    doc.setFont('helvetica','normal'); doc.text(vend, 38, y+29);
+  }
+  var c2 = W/2 + 2;
+  doc.setDrawColor(gm[0],gm[1],gm[2]); doc.line(W/2-2, y, W/2-2, y+h-5);
+  doc.setFont('helvetica','bold'); doc.text('Sucursal:', c2, y+11);
+  doc.setFont('helvetica','normal'); doc.text(suc, c2+22, y+11);
+  return y + h + 8;
+}
+
+function ftrPDF(doc) {
+  var W = doc.internal.pageSize.getWidth();
+  var H = doc.internal.pageSize.getHeight();
+  var az = [26,58,92], bl = [255,255,255];
+  doc.setFillColor(az[0],az[1],az[2]); doc.rect(0,H-10,W,10,'F');
+  doc.setTextColor(bl[0],bl[1],bl[2]); doc.setFontSize(7); doc.setFont('helvetica','normal');
+  doc.text('INSTALUVI — Ventanas & Puertas | El Salvador', W/2, H-4, { align:'center' });
+}
+
+// ============================================================
+// GENERAR COTIZACIÓN
+// ============================================================
+function generarCotizacion() {
+  var jsPDF = window.jspdf.jsPDF;
+  var doc = new jsPDF({ unit:'mm', format:'a4' });
+  var W   = doc.internal.pageSize.getWidth();
+  var numDoc = 'COT-' + Date.now().toString().slice(-6);
+  var az = [26,58,92], bl = [255,255,255], gr = [245,247,250], gm = [180,190,200], ng = [30,30,30];
+
+  // Valores de CALC — exactamente los calculados, sin recalcular
+  var C = CALC;
+  var descMotivo = document.getElementById('desc-motivo').value;
+  var modulo     = document.getElementById('modulo').value;
+  var notaPago   = document.getElementById('nota-pago').value;
+  var formaPago  = document.getElementById('forma-pago').value;
+  var pct = C.precioCliente > 0 ? ((C.anticipo / C.precioCliente)*100).toFixed(0) : 0;
+
+  hdrPDF(doc, 'COTIZACIÓN', numDoc);
+  var y = datosPDF(doc, 52, true);
+
+  doc.setTextColor(az[0],az[1],az[2]); doc.setFontSize(7); doc.setFont('helvetica','bold');
+  doc.text('DETALLE DE PRODUCTOS', 14, y); y += 3;
+
+  var filas = items.map(function(it) {
+    var ex = [];
+    if (it.vidrio)    ex.push('Vidrio: ' + it.vidrio);
+    if (it.chapaLabel) ex.push('Chapa: ' + it.chapaLabel +
+      (it.chapaExtra > 0 ? ' (+$' + it.chapaExtra.toFixed(2) + ')' : ''));
+    if (it.desc) ex.push(it.desc);
+    var med = it.tipo === 'm2'
+      ? it.medidas + '\n(área: ' + it.area.toFixed(3) + ' m²)' : it.medidas;
+    return [
+      it.cantidad.toString(),
+      it.nombre + (ex.length ? '\n' + ex.join(' | ') : ''),
+      med,
+      '$' + it.precio.toFixed(2) + '/' + (it.tipo === 'm2' ? 'm²' : 'ud'),
+      '$' + it.subtotal.toFixed(2)
+    ];
+  });
+
+  var bodyRows = filas;
+  if (modulo) {
+    bodyRows = [{ content: modulo, colSpan: 5,
+      styles: { halign:'center', fontStyle:'bold', fillColor:az, textColor:bl }}]
+      .concat(filas);
+  }
+  if (costos.length > 0) {
+    bodyRows = bodyRows.concat(
+      [{ content:'COSTOS ADICIONALES', colSpan:5,
+         styles:{halign:'center',fontStyle:'bold',fillColor:[80,120,80],textColor:bl,fontSize:7}}],
+      costos.map(function(ci){ return ['',ci.desc,'—','—','$'+ci.monto.toFixed(2)]; })
+    );
+  }
+
+  doc.autoTable({
+    startY: y,
+    head: [['Cant.','Descripción','Medidas','Precio unit.','Subtotal']],
+    body: bodyRows,
+    styles: { fontSize:8, cellPadding:3, textColor:ng },
+    headStyles: { fillColor:az, textColor:bl, fontStyle:'bold', fontSize:7 },
+    alternateRowStyles: { fillColor:gr },
+    columnStyles: {
+      0:{halign:'center',cellWidth:14}, 1:{cellWidth:74},
+      2:{halign:'left',cellWidth:36},  3:{halign:'center',cellWidth:28},
+      4:{halign:'right',cellWidth:22,fontStyle:'bold'}
+    },
+    margin:{left:10,right:10}, tableWidth:W-20
+  });
+
+  var fy = doc.lastAutoTable.finalY + 4;
+
+  // Filas de resumen
+  var rowsR = [];
+  rowsR.push({ label:'Subtotal:', val:'$'+fmt2(C.subtotal), color:ng });
+  if (C.descPct > 0) {
+    rowsR.push({ label:'Descuento ('+C.descPct+'%)' + (descMotivo ? ' — '+descMotivo : '') + ':',
+                 val:'-$'+fmt2(C.descMonto), color:[192,57,43] });
+    rowsR.push({ label:'Subtotal con descuento:', val:'$'+fmt2(C.subDescuento), color:ng });
+  }
+  if (C.apIva) rowsR.push({ label:'IVA (13%):', val:'+$'+fmt2(C.iva), color:[183,119,13] });
+
+  var cajaH = Math.max(62, rowsR.length * 12 + 36 + (notaPago ? 14 : 0));
+  doc.setFillColor(gr[0],gr[1],gr[2]); doc.rect(10,fy,W-20,cajaH,'F');
+  doc.setDrawColor(gm[0],gm[1],gm[2]); doc.rect(10,fy,W-20,cajaH,'S');
+  doc.setDrawColor(gm[0],gm[1],gm[2]);
+  doc.line(W/2-10, fy, W/2-10, fy+cajaH);
+  doc.line(W/2+30, fy, W/2+30, fy+cajaH);
+
+  // Col 1: Resumen
+  doc.setTextColor(az[0],az[1],az[2]); doc.setFontSize(7); doc.setFont('helvetica','bold');
+  doc.text('RESUMEN', 14, fy+8);
+  var yR = fy + 18;
+  rowsR.forEach(function(r) {
+    doc.setTextColor(r.color[0],r.color[1],r.color[2]);
+    doc.setFontSize(8); doc.setFont('helvetica','normal');
+    doc.text(r.label, 14, yR); doc.text(r.val, 70, yR); yR += 10;
+  });
+  doc.setFillColor(az[0],az[1],az[2]); doc.rect(12, yR-2, W/2-26, 11, 'F');
+  doc.setTextColor(bl[0],bl[1],bl[2]); doc.setFontSize(9); doc.setFont('helvetica','bold');
+  doc.text('TOTAL FINAL:', 14, yR+6); doc.text('$'+fmt2(C.totalFinal), 70, yR+6); yR += 14;
+  if (notaPago) {
+    doc.setTextColor(180,20,20); doc.setFontSize(7); doc.setFont('helvetica','bold');
+    var ln = doc.splitTextToSize(notaPago, W/2 - 26);
+    doc.text(ln, 14, yR);
+  }
+
+  // Col 2: Anticipo
+  var c2 = W/2 - 6;
+  doc.setTextColor(az[0],az[1],az[2]); doc.setFontSize(7); doc.setFont('helvetica','bold');
+  doc.text('ANTICIPO (' + pct + '%)', c2, fy+8);
+  doc.setTextColor(ng[0],ng[1],ng[2]); doc.setFontSize(8); doc.setFont('helvetica','normal');
+  doc.text('Precio al cliente:', c2, fy+18);
+  doc.setFont('helvetica','bold'); doc.setFontSize(11);
+  doc.text('$'+fmt2(C.precioCliente), c2, fy+28);
+  doc.setFontSize(8); doc.setFont('helvetica','normal');
+  doc.text('Anticipo: $'+fmt2(C.anticipo), c2, fy+38);
+  doc.text('Forma de pago: '+formaPago, c2, fy+cajaH-6);
+
+  // Col 3: Saldo
+  var c3 = W/2 + 34;
+  doc.setTextColor(az[0],az[1],az[2]); doc.setFontSize(7); doc.setFont('helvetica','bold');
+  doc.text('SALDO', c3, fy+8);
+  doc.setTextColor(163,45,45); doc.setFontSize(8); doc.setFont('helvetica','normal');
+  doc.text('Monto a cancelar:', c3, fy+18);
+  doc.setFont('helvetica','bold'); doc.setFontSize(13);
+  doc.text('$'+fmt2(C.saldo), c3, fy+30);
+
+  fy += cajaH + 8;
+
+  // DATOS IMPORTANTES
+  if (fy + 10 > doc.internal.pageSize.getHeight() - 20) { doc.addPage(); fy = 15; }
+  doc.setFillColor(az[0],az[1],az[2]); doc.rect(10,fy,W-20,9,'F');
+  doc.setTextColor(bl[0],bl[1],bl[2]); doc.setFontSize(8); doc.setFont('helvetica','bold');
+  doc.text('DATOS IMPORTANTES', W/2, fy+6, { align:'center' }); fy += 11;
+
+  CLS.forEach(function(cl, i) {
+    var txt = (i+1) + '.  ' + (cl.r ? cl.t+cl.r : cl.t);
+    var lin = doc.splitTextToSize(txt, W-26);
+    var aC  = lin.length * 5 + 6;
+    if (fy + aC > doc.internal.pageSize.getHeight() - 15) { doc.addPage(); fy = 15; }
+    doc.setFillColor(i%2===0?255:245, i%2===0?255:247, i%2===0?255:250);
+    doc.rect(10,fy,W-20,aC,'F'); doc.setDrawColor(gm[0],gm[1],gm[2]); doc.rect(10,fy,W-20,aC,'S');
+    doc.setTextColor(ng[0],ng[1],ng[2]); doc.setFontSize(8);
+    doc.setFont('helvetica', cl.b ? 'bold' : 'normal');
+    doc.text(lin, 14, fy+5); fy += aC;
+  });
+
+  ftrPDF(doc);
+  doc.save('Cotizacion_' + numDoc + '_' +
+    (document.getElementById('cliente').value||'cliente').replace(/\s/g,'_') + '.pdf');
+}
+
+// ============================================================
+// GENERAR ORDEN DE TRABAJO
+// ============================================================
+function generarOrdenTrabajo() {
+  var jsPDF = window.jspdf.jsPDF;
+  var doc = new jsPDF({ unit:'mm', format:'a4' });
+  var W   = doc.internal.pageSize.getWidth();
+  var numDoc = 'OT-' + Date.now().toString().slice(-6);
+  var az = [26,58,92], bl = [255,255,255], gr = [245,247,250], gm = [180,190,200], ng = [30,30,30];
+
+  var C      = CALC;
+  var modulo = document.getElementById('modulo').value;
+  var pct    = C.precioCliente > 0 ? ((C.anticipo/C.precioCliente)*100).toFixed(0) : 0;
+
+  hdrPDF(doc, 'ORDEN DE TRABAJO', numDoc);
+  var y = datosPDF(doc, 52, false);
+
+  doc.setTextColor(az[0],az[1],az[2]); doc.setFontSize(7); doc.setFont('helvetica','bold');
+  doc.text('DETALLE DE PRODUCTOS', 14, y); y += 3;
+
+  var filas = items.map(function(it) {
+    var ex = [];
+    if (it.vidrio)    ex.push('Vidrio: ' + it.vidrio);
+    if (it.chapaLabel) ex.push('Chapa: ' + it.chapaLabel);
+    if (it.desc) ex.push(it.desc);
+    var med = it.tipo === 'm2'
+      ? it.medidas + '\n(área: ' + it.area.toFixed(3) + ' m²)' : it.medidas;
+    return [
+      it.cantidad.toString(),
+      it.nombre + (ex.length ? '\n' + ex.join(' | ') : ''),
+      med
+    ];
+  });
+
+  var bodyRows = filas;
+  if (modulo) {
+    bodyRows = [{ content: modulo, colSpan: 3,
+      styles:{ halign:'center', fontStyle:'bold', fillColor:az, textColor:bl }}]
+      .concat(filas);
+  }
+
+  doc.autoTable({
+    startY: y,
+    head: [['Cant.','Descripción del producto','Medidas']],
+    body: bodyRows,
+    styles: { fontSize:8, cellPadding:4, textColor:ng },
+    headStyles: { fillColor:az, textColor:bl, fontStyle:'bold', fontSize:7 },
+    alternateRowStyles: { fillColor:gr },
+    columnStyles: {
+      0:{ halign:'center', cellWidth:16 },
+      1:{ cellWidth:103 },
+      2:{ halign:'left', cellWidth:57 }
+    },
+    margin:{ left:10, right:10 }, tableWidth:W-20
+  });
+
+  var fy = doc.lastAutoTable.finalY + 6;
+  doc.setFillColor(gr[0],gr[1],gr[2]); doc.rect(10,fy,W-20,16,'F');
+  doc.setDrawColor(gm[0],gm[1],gm[2]); doc.rect(10,fy,W-20,16,'S');
+  doc.setTextColor(az[0],az[1],az[2]); doc.setFontSize(8); doc.setFont('helvetica','bold');
+  doc.text('Anticipo recibido: ' + pct + '%', 14, fy+6);
+  doc.setTextColor(ng[0],ng[1],ng[2]); doc.setFontSize(8); doc.setFont('helvetica','normal');
+  doc.text('Forma de pago: ' + document.getElementById('forma-pago').value, 14, fy+13);
+  fy += 22;
+
+  // MEJORA 1: Múltiples imágenes en PDF — todas las de producto y cuaderno
+  var todas = imgs.prod.map(function(i){ return Object.assign({}, i, {tipo:'Producto'}); })
+    .concat(imgs.cua.map(function(i){ return Object.assign({}, i, {tipo:'Cuaderno'}); }));
+
+  if (todas.length > 0) {
+    doc.setTextColor(az[0],az[1],az[2]); doc.setFontSize(7); doc.setFont('helvetica','bold');
+    doc.text('IMÁGENES DE REFERENCIA', 14, fy); fy += 4;
+    var iw = 85, ih = 58, col = 0;
+    todas.forEach(function(img) {
+      var xP = col === 0 ? 10 : 10 + iw + 5;
+      if (fy + ih + 12 > doc.internal.pageSize.getHeight() - 15 && col === 0) {
+        doc.addPage(); fy = 15;
+      }
+      try {
+        var ext = img.b64.indexOf('image/png') >= 0 ? 'PNG' : 'JPEG';
+        doc.addImage(img.b64, ext, xP, fy, iw, ih);
+        doc.setFontSize(7); doc.setFont('helvetica','normal');
+        doc.setTextColor(ng[0],ng[1],ng[2]);
+        doc.text(img.tipo + ': ' + img.name.substring(0,22),
+          xP + iw/2, fy + ih + 5, { align:'center' });
+      } catch(e) {}
+      col++;
+      if (col >= 2) { col = 0; fy += ih + 12; }
+    });
+    if (col === 1) fy += ih + 12;
+  }
+
+  ftrPDF(doc);
+  doc.save('OrdenTrabajo_' + numDoc + '_' +
+    (document.getElementById('cliente').value||'cliente').replace(/\s/g,'_') + '.pdf');
+}
+
+// Inicializar
+cargarProductos();
+</script>
+</body>
+</html>
